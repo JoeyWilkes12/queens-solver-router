@@ -1,94 +1,70 @@
-# Queens Solver router
+# Queens Solver — QR Code Router
 
-A permanent address for **Queens Solver**, Joey Wilkes's Queens puzzle solver. It
-redirects immediately to wherever the app is hosted, so links and QR codes keep
-working when the host changes.
+This repository provides a stable web address for **Queens Solver**, Joey Wilkes's Queens puzzle solver. Visitors follow a portfolio link or scan a QR code, open the router, and are forwarded to the current application.
 
-- Public address: https://joeywilkes12.github.io/queens-solver-router/
-- Current destination: https://queens-solver.replit.app/ (Replit Autoscale)
-- Repository: https://github.com/JoeyWilkes12/queens-solver-router
-- QR assets: `queens-solver-router-qr.png` (1176 × 1176 pixels, 300 DPI, black on
-  white, high error correction) and `queens-solver-router-qr.svg`. Both encode the
-  router address, not the destination.
+The router lets you **print, laminate, and distribute a QR code, then maintain its destination in one place.** If Queens Solver moves to a different URL or hosting provider, update the router while keeping the address encoded in the QR code unchanged.
 
-Environment role: routes to the **Production** Queens Solver deployment on
-Replit. Agents: see [AGENTS.md](AGENTS.md).
+## Why use a router?
 
-Built from the [personal-website-router](https://github.com/JoeyWilkes12/personal-website-router)
-template. See the [maintenance guide](MAINTENANCE.md) for changing or reverting
-the destination, validation, commit/push commands, PR approval, and publication.
+A stable entry point keeps shared links and physical materials useful as the application evolves:
 
-## Who links here
+- **Preserve printed materials.** QR codes that point to the router can continue working after a destination change, without reprinting or redistributing them.
+- **Centralize updates.** One destination change updates every portfolio link, bookmark, and QR code that uses the router address.
+- **Support future moves.** The application can be hosted independently while visitors retain a consistent way to reach it.
 
-Link to the router address, not the host, anywhere the link should survive a
-host change:
+These benefits depend on preserving the router URL and keeping its GitHub Pages publication available.
 
-- The Portfolio page of Joey Wilkes's personal website.
-- Printed or shared QR codes.
+## Routing
 
-Changing the destination here updates every one of those without republishing
-the personal website.
-
-## Change the destination
-
-Edit only the `redirect_url` value at the top of `index.html`:
-
-```yaml
-redirect_url: "https://queens-solver.replit.app/"
+```mermaid
+flowchart LR
+    QR[Printed or laminated QR code] --> Router[Stable Queens Solver router URL]
+    Link[Portfolio link or bookmark] --> Router
+    Router --> App[Current Queens Solver application]
 ```
 
-Commit and push a feature branch, then open a PR. After you approve and merge it
-into `main`, GitHub Pages runs Jekyll automatically and replaces every
-`page.redirect_url` reference with that value. This updates the JavaScript
-redirect, HTML refresh, fallback link, canonical link, and structured metadata
-together. Keep the URL in double quotes and use an absolute HTTPS address.
+| Address | URL |
+| --- | --- |
+| **Share or encode in the QR code** | [https://joeywilkes12.github.io/queens-solver-router/](https://joeywilkes12.github.io/queens-solver-router/) |
+| Current application destination | [https://queens-solver.replit.app/](https://queens-solver.replit.app/) |
 
-JavaScript uses `location.replace()` so the browser's Back button doesn't loop
-through the router. The HTML refresh also works with JavaScript disabled. The
-visible link provides a manual way to continue if automatic navigation is blocked.
-This is a browser redirect served with HTTP 200, rather than an HTTP 301/302.
+Download the existing QR assets as [PNG](queens-solver-router-qr.png) or [SVG](queens-solver-router-qr.svg). Both encode the stable router address. Preserve the white border around the code when printing or placing it.
 
-Keep the repository name and Pages address stable. Allow GitHub Pages a few
-minutes to publish a push.
+## Implementation
 
-## Publishing and checks
+The router is a static HTML page rendered by GitHub Pages with Jekyll. A single `redirect_url` setting in [index.html](index.html) supplies the destination for:
 
-GitHub Pages publishes the root of the `main` branch with its built-in Jekyll build.
-Do not add `.nojekyll`: it would disable the URL substitutions. Opening the source
-HTML directly also skips Jekyll; preview the generated site instead.
+- A **meta refresh** that forwards the browser automatically.
+- **JavaScript** using `window.location.replace(...)`, so the router does not add an entry to browser history.
+- A **manual link** for visitors whose browser blocks automatic navigation.
+- The canonical link and structured metadata.
 
-Run the automated hyperlink and generated-content regression check before a
-release, supplying a rendered local preview URL, then verify the public deployment.
-The maintenance guide includes a complete preview setup using
-`scripts/render_preview.rb`:
+The redirect happens in the browser; the router page itself returns HTTP 200 rather than an HTTP 301/302 redirect. No application backend or database is required for the router.
 
-```sh
-python3 scripts/check_links.py --site-url http://127.0.0.1:4179/queens-solver-router/
-python3 scripts/check_links.py
-```
+## Deployment
 
-The checker follows HTTP redirects, fails on HTTP 4xx/5xx, and checks the published
-redirect destinations, metadata, sitemap, robots file, and both QR files. Browser
-regression coverage checks immediate navigation with and without JavaScript,
-Back-button behavior, the fallback link, keyboard focus, and overflow at 390px
-and 1440px. With Playwright CLI open on that localhost preview, run
-`run-code --filename scripts/browser_check.js`. The test substitutes a local
-destination so the browser does not visit external sites.
+GitHub Pages publishes this repository with the following configuration:
 
-`robots.txt` allows public content. Because this is a GitHub project site, its file
-is under the project path; domain-wide crawler rules belong to the account's root
-site. The canonical URL points crawlers to the current destination.
+| Setting | Value |
+| --- | --- |
+| Publishing branch | `main` |
+| Publishing folder | `/` (repository root) |
+| Rendering | GitHub Pages' built-in Jekyll build |
+| Live router file | [index.html on main](https://github.com/JoeyWilkes12/queens-solver-router/blob/main/index.html) |
 
-## QR source
+Keep `.nojekyll` absent: Jekyll processes the Liquid expressions that insert the destination URL. Opening the source HTML directly skips that processing; use a rendered preview when checking changes.
 
-Regenerate the QR files with the QR Code Generator skill only if the stable
-Pages address changes:
+## Changing the destination
 
-```sh
-python3 ~/.claude/skills/qr-code-generator/scripts/generate_qr.py \
-  "https://joeywilkes12.github.io/queens-solver-router/" \
-  --name queens-solver-router-qr --formats png,svg --box-size 24 --output-dir .
-```
+1. Confirm the replacement application is published and accessible at its new HTTPS URL.
+2. Create a feature branch from `main` and update `redirect_url` at the top of `index.html`. Keep it an absolute HTTPS URL in double quotes:
 
-The four-module white border is the required quiet zone; preserve it when
-printing or placing the image.
+   ```yaml
+   redirect_url: "https://queens-solver.replit.app/"
+   ```
+
+3. Validate a rendered preview using the link checker and browser checks described in [MAINTENANCE.md](MAINTENANCE.md), and update the current destination in this README.
+4. Open a pull request against `main` for review. Merge only after the repository owner's explicit approval; merging starts GitHub Pages publication.
+5. After publication finishes, verify that the router URL and a scanned QR code both reach the new destination.
+
+Keep the repository name, public router URL, and existing QR assets unchanged when moving the application. See the [maintenance guide](MAINTENANCE.md) for preview setup, validation commands, publication checks, and rollback instructions.
