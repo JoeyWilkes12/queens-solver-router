@@ -5,14 +5,15 @@ redirects immediately to wherever the app is hosted, so links and QR codes keep
 working when the host changes.
 
 - Public address: https://joeywilkes12.github.io/queens-solver-router/
-- Current destination: https://queens-solver.replit.app/ (Replit Autoscale)
+- Current destination: https://queens-solver-jw.vercel.app/ (Vercel Container Runtime)
+- Rollback destination: https://queens-solver.replit.app/ (Replit Autoscale)
 - Repository: https://github.com/JoeyWilkes12/queens-solver-router
 - QR assets: `queens-solver-router-qr.png` (1176 × 1176 pixels, 300 DPI, black on
   white, high error correction) and `queens-solver-router-qr.svg`. Both encode the
   router address, not the destination.
 
 Environment role: routes to the **Production** Queens Solver deployment on
-Replit. Agents: see [AGENTS.md](AGENTS.md).
+Vercel. Agents: see [AGENTS.md](AGENTS.md).
 
 Built from the [personal-website-router](https://github.com/JoeyWilkes12/personal-website-router)
 template. See the [maintenance guide](MAINTENANCE.md) for changing or reverting
@@ -34,7 +35,7 @@ the personal website.
 Edit only the `redirect_url` value at the top of `index.html`:
 
 ```yaml
-redirect_url: "https://queens-solver.replit.app/"
+redirect_url: "https://queens-solver-jw.vercel.app/"
 ```
 
 Commit and push a feature branch, then open a PR. After you approve and merge it

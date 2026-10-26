@@ -10,7 +10,8 @@ Portfolio links here, not to the app host.
 | Environment | Address | Role here |
 | --- | --- | --- |
 | Dev | Local Liquid preview, also shared on the owner's tailnet | Render and check changes before a PR |
-| Production destination | https://queens-solver.replit.app/ (Replit Autoscale) | The destination on `main` |
+| Production destination | https://queens-solver-jw.vercel.app/ (Vercel Container Runtime) | The destination on `main` |
+| Rollback destination | https://queens-solver.replit.app/ (Replit Autoscale) | Restore by setting `redirect_url` back to it |
 
 The personal website's own Dev, Test, Staging, and Production environments all
 link to this router. The full environment reference lives in the owner's
